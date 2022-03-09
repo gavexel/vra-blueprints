@@ -1,0 +1,27 @@
+name: VMW-ENG-CentOS
+version: 1
+formatVersion: 1
+inputs: {}
+resources:
+  Cloud_Machine_1:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      name: CentOS
+      image: VMW-CentOS
+      flavor: VMW-Small
+      customizationSpec: Lin-Cust
+      networks:
+        - network: '${resource.Cloud_vSphere_Network_1.id}'
+  Cloud_vSphere_Network_1:
+    type: Cloud.vSphere.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      name: VMW-Production
+      networkType: existing
