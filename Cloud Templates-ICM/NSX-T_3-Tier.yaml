@@ -1,0 +1,123 @@
+formatVersion: 1
+inputs: {}
+resources:
+  Web-SG:
+    type: Cloud.SecurityGroup
+    metadata:
+      layoutPosition:
+        - 0
+        - 1
+    properties:
+      securityGroupType: new
+  App-SG:
+    type: Cloud.SecurityGroup
+    metadata:
+      layoutPosition:
+        - 0
+        - 2
+    properties:
+      securityGroupType: new
+  DB-SG:
+    type: Cloud.SecurityGroup
+    metadata:
+      layoutPosition:
+        - 0
+        - 3
+    properties:
+      securityGroupType: new
+  Web-LB:
+    type: Cloud.NSX.LoadBalancer
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      routes:
+        - protocol: HTTP
+          port: 80
+          instanceProtocol: HTTP
+          instancePort: 80
+          healthCheckConfiguration:
+            protocol: HTTP
+            port: 80
+            urlPath: /index.html
+            intervalSeconds: 60
+            timeoutSeconds: 5
+            unhealthyThreshold: 5
+            healthyThreshold: 2
+      network: '${resource["Web-Routed"].id}'
+      instances:
+        - '${resource["Web-VM"].id}'
+  Web-VM:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 1
+        - 1
+    properties:
+      name: Web-Node
+      count: 2
+      image: VMW-Web
+      flavor: VMW-Small
+      networks:
+        - network: '${resource["Web-Routed"].id}'
+          securityGroups:
+            - '${resource["Web-SG"].id}'
+  App-VM:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 1
+        - 2
+    properties:
+      name: App-Node
+      image: VMW-App
+      flavor: VMW-Small
+      networks:
+        - network: '${resource["App-Routed"].id}'
+          securityGroups:
+            - '${resource["App-SG"].id}'
+  DB-VM:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 1
+        - 3
+    properties:
+      name: DB-Node
+      image: VMW-DB
+      flavor: VMW-Small
+      networks:
+        - network: '${resource["DB-Routed"].id}'
+          securityGroups:
+            - '${resource["DB-SG"].id}'
+  Web-Routed:
+    type: Cloud.NSX.Network
+    metadata:
+      layoutPosition:
+        - 2
+        - 0
+    properties:
+      networkType: routed
+      constraints:
+        - tag: 'net:web'
+  App-Routed:
+    type: Cloud.NSX.Network
+    metadata:
+      layoutPosition:
+        - 3
+        - 0
+    properties:
+      networkType: routed
+      constraints:
+        - tag: 'net:app'
+  DB-Routed:
+    type: Cloud.NSX.Network
+    metadata:
+      layoutPosition:
+        - 4
+        - 0
+    properties:
+      networkType: routed
+      constraints:
+        - tag: 'net:db'

@@ -1,0 +1,28 @@
+formatVersion: 1 
+inputs: 
+  SelectEnvironment: 
+    type: string 
+    enum: 
+      - 'env:production' 
+      - 'env:testdev' 
+    title: Environment 
+    description: Environment to deploy into 
+    default: 'env:production' 
+resources: 
+  Cloud_vSphere_Machine_1: 
+    type: Cloud.vSphere.Machine 
+    properties: 
+      image: VMW-CentOS 
+      flavor: VMW-Small 
+      customizationSpec: Lin-Cust 
+      networks: 
+        - network: '${resource.Cloud_vSphere_Network_1.id}' 
+          assignment: static 
+      constraints: 
+        - tag: '${input.SelectEnvironment}' 
+  Cloud_vSphere_Network_1: 
+    type: Cloud.vSphere.Network 
+    properties: 
+      networkType: existing 
+      name: VMW-Production 
+      networkCidr: 172.20.11.0/24 

@@ -1,0 +1,32 @@
+formatVersion: 1
+Cloud_Machine: null
+inputs:
+  hostname1:
+    type: string
+  user:
+    type: string
+    title: Username for SSH
+    description: The username you would like to have for the installation.
+    default: demouser
+  password:
+    type: string
+    pattern: '[a-z0-9A-Z@#$]+'
+    encrypted: true
+    title: Admin Account Password
+    description: The password you would like to use for the System resources
+resources:
+  Cloud_vSphere_Machine_1:
+    type: Cloud.vSphere.Machine
+    properties:
+      image: VMW-Ubuntu-Cloud
+      flavor: VMW-Small
+      # customizationSpec: Lin-Cust
+      networks:
+        - network: '${resource.Cloud_vSphere_Network_1.id}'
+          assignment: dynamic
+  Cloud_vSphere_Network_1:
+    type: Cloud.vSphere.Network
+    properties:
+      networkType: existing
+      name: VMW-Production
+      networkCidr: 172.20.11.0/24

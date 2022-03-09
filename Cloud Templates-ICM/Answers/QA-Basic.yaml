@@ -1,0 +1,26 @@
+formatVersion: 1
+inputs: {}
+resources:
+  Cloud_vSphere_Machine_1:
+    type: Cloud.vSphere.Machine
+    properties:
+      image: VMW-PhotonOS
+      flavor: VMW-Small
+      folderName: Lab-VMs
+      customizationSpec: Lin-Cust
+      networks:
+        - dns: []
+          tags: []
+          address: 172.20.11.185
+          network: '${resource.Cloud_vSphere_Network_1.id}'
+          assignment: static
+          securityGroups: []
+          dnsSearchDomains: []
+          assignIPv6Address: false
+          assignPublicIpAddress: false
+  Cloud_vSphere_Network_1:
+    type: Cloud.vSphere.Network
+    properties:
+      networkType: existing
+      name: VMW-Production
+      networkCidr: 172.20.11.0/24

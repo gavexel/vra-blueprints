@@ -1,0 +1,18 @@
+formatVersion: 1
+inputs:
+  FCD_Size:
+    type: integer
+    enum:
+      - 1
+      - 2
+      - 4
+    title: FCD size in GB
+    description: Size of FCD in gigabytes
+    default: 1
+resources:
+  Cloud_vSphere_Disk_1:
+    type: Cloud.vSphere.Disk
+    properties:
+      capacityGb: '${input.FCD_Size}'
+      storagePolicy: Silver-vSphere-Storage-Policy
+      provisioningType: thin
