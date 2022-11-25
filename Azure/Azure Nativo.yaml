@@ -1,0 +1,16 @@
+formatVersion: 1
+inputs: {}
+resources:
+  Cloud_Network_1:
+    type: Cloud.Network
+    properties:
+      networkType: existing
+  Cloud_Machine_1:
+    type: Cloud.Machine
+    properties:
+      image: Win2022
+      flavor: MedioTest
+      constraints:
+        - tag: env:azure
+      networks:
+        - network: ${resource.Cloud_Network_1.id}
